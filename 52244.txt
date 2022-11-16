@@ -1,0 +1,1 @@
+{"status":"SUCCESS","data":{"id":2311965,"localProxyPort":"9090","tunnelName":"bpop_hipotecario_866134835322597795","environment":"prod","version":"3.1.25","mode":"ssh","sshConnType":"over_22"}}

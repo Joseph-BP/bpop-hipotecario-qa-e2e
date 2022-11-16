@@ -1,0 +1,104 @@
+apply from: "https://gradle.avaldigitallabs.com/resources/java-serenity-project.gradle"
+
+group 'co.bpop.hipotecario.qa.ui'
+version '1.0-SNAPSHOT'
+
+defaultTasks 'clean', 'test', 'aggregate'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+ext {
+    libs = [
+            slf4jApi: "org.slf4j:slf4j-api:${slf4jVersion}",
+            log4j: "org.slf4j:slf4j-simple:${slf4jVersion}",
+            logback : "ch.qos.logback:logback-classic:${logbackVersion}",
+            lombok : "org.projectlombok:lombok:${lombokVersion}",
+            lambdatest: "com.github.lambdatest:lambdatest-tunnel-binary:1.0.10",
+            test: [
+                    serenity: [
+                            core                   : "net.serenity-bdd:serenity-core:${serenityCoreVersion}",
+                            junit                  : "net.serenity-bdd:serenity-junit:${serenityCoreVersion}",
+                            screenplay             : "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}",
+                            screenplayWebdriver    : "net.serenity-bdd:serenity-screenplay-webdriver:${serenityCoreVersion}",
+                            cucumberJava           : "io.cucumber:cucumber-java8:${cucumberJVMVersion}",
+                            cucumberJunit          : "io.cucumber:cucumber-junit:${cucumberJVMVersion}",
+                            cucumberSerenity       : "net.serenity-bdd:serenity-cucumber6:${serenityCoreVersion}",
+                            ensure                 : "net.serenity-bdd:serenity-ensure:${serenityCoreVersion}",
+                            restAssured            : "net.serenity-bdd:serenity-rest-assured:${serenityCoreVersion}",
+                            rest                   : "net.serenity-bdd:serenity-screenplay-rest:${serenityCoreVersion}",
+                            jsonReport             : "net.serenity-bdd:serenity-json-summary-report:${serenityCoreVersion}"
+                    ],
+                    junit: "junit:junit:${junitVersion}",
+                    sonarqube: "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarVersion}",
+                    assertj : "org.assertj:assertj-core:${assertJVersion}",
+                    hamcrest: "org.hamcrest:hamcrest-all:${hamcrestVersion}"
+            ]
+    ]
+}
+dependencies {
+    implementation libs.test.hamcrest,
+            libs.test.assertj,
+            libs.test.sonarqube,
+            libs.test.junit,
+            libs.log4j,
+            libs.logback,
+            libs.slf4jApi,
+            libs.test.serenity.core,
+            libs.test.serenity.screenplay,
+            libs.test.serenity.junit,
+            libs.test.serenity.screenplayWebdriver,
+            libs.test.serenity.rest,
+            libs.test.serenity.restAssured,
+            libs.test.serenity.ensure,
+            libs.test.serenity.cucumberSerenity,
+            libs.test.serenity.cucumberJava,
+            libs.test.serenity.cucumberJunit,
+            libs.test.serenity.jsonReport,
+            libs.lambdatest,
+            "log4j:log4j:1.2.17"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.3'
+
+    implementation group: 'com.github.lambdatest', name: 'lambdatest-tunnel-binary', version: '1.0.10'
+    testCompileOnly 'org.projectlombok:lombok:1.18.10'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+}
+
+serenity{
+    reports = ["json-summary"]
+}
+
+tasks.withType(Test) {
+    systemProperties System.getProperties()
+    def forks = 8
+    println "The Maximum parallel is $forks"
+    maxParallelForks = forks
+    include '**/Parallel**.class'
+    testLogging.showStandardStreams = true
+    finalizedBy(aggregate)
+}
+
+gradle.startParameter.continueOnFailure = true
+description = 'Banco Popular - Credito hipotecario - Test Cases'
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "bpop-hipotecario-qa-e2e"
+        property "sonar.projectName", "Crédito Hipotecario Banco Popular QA-Front"
+        property "sonar.sources", "src"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.java.binaries", "build/classes"
+        property "sonar.coverage.exclusions", "**/*.java"
+        property "sonar.exclusions", "**/*Generated.java"
+        property "sonar.tests", ""
+    }
+}
+
+test.finalizedBy(aggregate)
