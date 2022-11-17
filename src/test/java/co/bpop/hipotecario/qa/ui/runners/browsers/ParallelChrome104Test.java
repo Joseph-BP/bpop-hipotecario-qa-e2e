@@ -12,9 +12,9 @@ import org.junit.runner.RunWith;
         plugin = {"pretty"},
         features = "src/test/resources/features",
         glue = "co/bpop/hipotecario/qa/ui/steps",
-        //tags = "@Creacion_Link_Autenticacion"
+        tags = "@Creacion_Link_Autenticacion"
         //tags = "@Flujo_cliente_uno"
-        tags = "@Flujo_cliente_uno_y_dos"
+        //tags = "@Flujo_cliente_uno_y_dos"
         //tags = "@Flujo_cliente_uno_fallo_generacion_otp"
         //tags = "@Flujo_cliente_uno_fallo_validacion_otp"
         //tags = "@Flujo_cliente_uno_y_dos_fallo_generacion_otp"

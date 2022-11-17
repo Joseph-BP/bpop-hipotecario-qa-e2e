@@ -14,38 +14,27 @@ import co.bpop.hipotecario.qa.ui.screenplay.userinterface.*;
 import co.bpop.hipotecario.qa.ui.utilities.Constants;
 import co.bpop.hipotecario.qa.ui.utilities.EnvironmentProperties;
 import co.bpop.hipotecario.qa.ui.utilities.apis.AuthenticationAWS;
-import com.openhtmltopdf.css.style.derived.StringValue;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.Before;
 import io.cucumber.java.es.Cuando;
 import io.cucumber.java.es.Dado;
 import io.cucumber.java.es.Entonces;
 import net.serenitybdd.screenplay.actions.Click;
-import net.serenitybdd.screenplay.actions.MoveMouse;
 import net.serenitybdd.screenplay.actions.Open;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.serenitybdd.screenplay.ensure.Ensure;
-import net.serenitybdd.screenplay.questions.targets.TargetSelectedValue;
-import net.serenitybdd.screenplay.targets.Target;
-import net.serenitybdd.screenplay.targets.TargetBuilder;
-import net.serenitybdd.screenplay.targets.TargetSelectorWithVariables;
 import net.serenitybdd.screenplay.waits.WaitUntil;
 import net.thucydides.core.annotations.Steps;
-import org.openqa.selenium.WebElement;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static co.bpop.hipotecario.qa.ui.screenplay.userinterface.PreApprovalPage.LABEL_PREAPPROVED_VALUE;
-import static java.lang.String.*;
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 import static net.serenitybdd.screenplay.matchers.WebElementStateMatchers.isPresent;
-import static net.serenitybdd.screenplay.matchers.WebElementStateMatchers.isVisible;
 import static org.hamcrest.Matchers.containsString;
 
 public class OfficeLivingCreditOneClientSuccessSteps {
@@ -98,22 +87,6 @@ public class OfficeLivingCreditOneClientSuccessSteps {
 
     @Cuando("solicita OTP nuevo")
     public void solicitaOtpNuevo(DataTable data) {
-        if (OtpValidationPage.OTP_TITLE_PAGE
-                .resolveFor(theActorInTheSpotlight()).getText().contains(Constants.TITULO_GENERACION_OTP)) {
-            theActorInTheSpotlight().should(
-                    seeThat(OtpPageQuestions.title(), containsString(Constants.TITULO_GENERACION_OTP))
-            );}
-        if (OtpValidationPage.OTP_TITLE_PAGE
-                    .resolveFor(theActorInTheSpotlight()).getText().contains(Constants.TITULO_ACEPTACION_HABEAS_DATA)) {
-                theActorInTheSpotlight().should(
-                        seeThat(OtpPageQuestions.title(), containsString(Constants.TITULO_ACEPTACION_HABEAS_DATA))
-                );}
-        if (OtpValidationPage.OTP_TITLE_PAGE
-                    .resolveFor(theActorInTheSpotlight()).getText().contains(Constants.TITULO_CLIENTE_DESBORDADO_ER_TEC)) {
-                theActorInTheSpotlight().should(
-                        seeThat(OtpPageQuestions.title(), containsString(Constants.TITULO_CLIENTE_DESBORDADO_ER_TEC))
-                );}
-
             theActorInTheSpotlight().attemptsTo(
                     OtpClient.nuevoOtp(data.asList()));
     }
